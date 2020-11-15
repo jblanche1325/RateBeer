@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
+
+import sys
 import requests
 import re
-
 import pandas as pd
 
 def get_beer_ratings(base_url, beer_start, beer_end):
@@ -20,7 +21,7 @@ def get_beer_ratings(base_url, beer_start, beer_end):
     abvs = []
     
     for i in range(beer_start, beer_end + 1):
-        page = requests.get(base_beer_url + str(i))
+        page = requests.get(base_url + str(i))
         if page.ok:
             soup = BeautifulSoup(page.text, 'html.parser')
             if 'RETIRED' in soup.get_text().strip():
@@ -107,10 +108,10 @@ def get_beer_ratings(base_url, beer_start, beer_end):
                     except ValueError:
                         abvs.append(-1)
                 
-                #print('iteration ' + str(i) + ': ' +  name)
+                print('iteration ' + str(i) + ': ' +  name)
         else:
             pass
-            #print('iteration ' + str(i) + ': ' +  'Not Found')
+            print('iteration ' + str(i) + ': ' +  'Not Found')
         
     #global beer_info_df
     beer_info_df = pd.DataFrame({'beer_id': beer_ids,
@@ -125,3 +126,9 @@ def get_beer_ratings(base_url, beer_start, beer_end):
                                  'abv': abvs})
     
     beer_info_df.to_csv(beer_path_name, index=False)
+    
+if __name__ == '__main__':
+    beer_site = sys.argv[1]
+    beer_start = int(sys.argv[2])
+    beer_end = int(sys.argv[3])
+    get_beer_ratings(beer_site, beer_start, beer_end)
