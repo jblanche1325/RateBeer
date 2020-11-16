@@ -8,6 +8,7 @@ import pandas as pd
 def get_beer_ratings(base_url, beer_start, beer_end):
     
     beer_path_name = ('beer_table_' + str(beer_start) + '_to_' + str(beer_end) + '.csv')
+    unlisted_string = 'For one reason or another, this product is not thought to be suitable for reviewing.'
     
     beer_ids = []
     beer_names = []
@@ -24,7 +25,7 @@ def get_beer_ratings(base_url, beer_start, beer_end):
         page = requests.get(base_url + str(i))
         if page.ok:
             soup = BeautifulSoup(page.text, 'html.parser')
-            if 'RETIRED' in soup.get_text().strip():
+            if 'RETIRED' in soup.get_text().strip() or unlisted_string in soup.get_text().strip():
                 pass
             else:
                 # Beer ID
