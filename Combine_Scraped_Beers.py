@@ -2,6 +2,8 @@ import os
 import pandas as pd
 
 def combine_scraped_beers():
+    
+    big_beer_table = []
 
     data_files = [f for f in os.listdir() if 'beer_table' in f]
 
